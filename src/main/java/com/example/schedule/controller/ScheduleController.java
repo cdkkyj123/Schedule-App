@@ -1,8 +1,6 @@
 package com.example.schedule.controller;
 
-import com.example.schedule.dto.CreateScheduleRequest;
-import com.example.schedule.dto.CreateScheduleResponse;
-import com.example.schedule.dto.GetScheduleResponse;
+import com.example.schedule.dto.*;
 import com.example.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +33,15 @@ public class ScheduleController {
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findPosterAllSchedule(schedulePoster));
         }
+    }
+
+    @PatchMapping("/schedules/{scheduleId}")
+    public ResponseEntity<UpdateScheduleResponse> update(
+            @PathVariable Long scheduleId,
+            @RequestBody UpdateScheduleRequest request
+    ) {
+        UpdateScheduleResponse result = scheduleService.updateSchedule(scheduleId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
 

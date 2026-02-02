@@ -1,8 +1,6 @@
 package com.example.schedule.service;
 
-import com.example.schedule.dto.CreateScheduleRequest;
-import com.example.schedule.dto.CreateScheduleResponse;
-import com.example.schedule.dto.GetScheduleResponse;
+import com.example.schedule.dto.*;
 import com.example.schedule.entity.Schedule;
 import com.example.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -80,5 +79,25 @@ public class ScheduleService {
             dtos.add(dto);
         }
         return dtos;
+    }
+
+    @Transactional
+    public UpdateScheduleResponse updateSchedule(Long scheduleId, UpdateScheduleRequest request) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("없는 일정 입니다.")
+        );
+        if (Objects.equals(request.getPassword(), schedule.getPassword())) {
+            schedule.update(request.getTitle(), request.getPoster());
+            return new UpdateScheduleResponse(
+                    schedule.getId(),
+                    schedule.getTitle(),
+                    schedule.getContents(),
+                    schedule.getPoster(),
+                    schedule.getCreatedAt(),
+                    schedule.getModifiedAt()
+            );
+        } else {
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }
