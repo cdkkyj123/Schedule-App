@@ -23,7 +23,7 @@ public class CommentController {
         try {
             result = commentService.saveComment(request);
         } catch (Exception e) {
-            return ResponseEntity.status(403).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
