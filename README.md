@@ -30,9 +30,9 @@ erDiagram
     
     SCHEDULE {
         bigint id PK "일정 ID (Auto Increment)"
-        varchar(30) title "할일 제목"
-        varchar(200) contents "할일 내용"
-        varchar(255) poster "담당자"
+        varchar(30) title "일정 제목"
+        varchar(200) contents "일정 내용"
+        varchar(255) poster "작성자"
         varchar(255) password "비밀번호"
         datetime created_at "작성일"
         datetime modified_at "수정일"
@@ -52,7 +52,7 @@ erDiagram
 ## 💡 주요 기능 및 로직 설명
 
 ### 1. 엔티티 구조
-- **Schedule (일정):** 할일 제목, 내용, 담당자, 비밀번호를 포함합니다.
+- **Schedule (일정):** 일정 제목, 내용, 작성자, 비밀번호를 포함합니다.
 - **Comment (댓글):** 댓글 내용, 작성자, 비밀번호를 포함하며 특정 `Schedule`의 ID(`scheduleId`)를 가집니다.
 - **BaseEntity:** 모든 엔티티는 생성일(`createdAt`)과 수정일(`modifiedAt`)을 자동으로 관리합니다.
 
