@@ -15,6 +15,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final CommentService commentService;
 
     @Transactional
     public CreateScheduleResponse save(CreateScheduleRequest request) {
@@ -31,17 +32,19 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public GetScheduleResponse findOneSchdule(Long scheduleId) {
+    public GetOneScheduleResponse findOneSchdule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("없는 일정 입니다.")
         );
-        return new GetScheduleResponse(
+        List<GetCommentResponse> commentByScheduleId = commentService.findCommentByScheduleId(scheduleId);
+        return new GetOneScheduleResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContents(),
                 schedule.getPoster(),
                 schedule.getCreatedAt(),
-                schedule.getModifiedAt()
+                schedule.getModifiedAt(),
+                commentByScheduleId
         );
     }
 
