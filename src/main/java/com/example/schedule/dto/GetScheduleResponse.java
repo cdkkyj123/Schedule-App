@@ -13,13 +13,15 @@ public class GetScheduleResponse {
     private final String poster;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
+    private final List<GetCommentResponse> comments;
 
-    public GetScheduleResponse(Long id, String title, String contents, String poster, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public GetScheduleResponse(Long id, String title, String contents, String poster, LocalDateTime createdAt, LocalDateTime modifiedAt, List<GetCommentResponse> comments) {
         this.id = id;
         this.title = title;
         this.contents = contents;
         this.poster = poster;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
+        this.comments = comments;
     }
 }

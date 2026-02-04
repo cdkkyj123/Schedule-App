@@ -21,7 +21,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedules/{scheduleId}")
-    public ResponseEntity<GetOneScheduleResponse> findOne(@PathVariable Long scheduleId){
+    public ResponseEntity<GetScheduleResponse> findOne(@PathVariable Long scheduleId){
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findOneSchdule(scheduleId));
     }
 

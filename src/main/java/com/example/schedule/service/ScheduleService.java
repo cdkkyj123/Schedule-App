@@ -32,12 +32,12 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public GetOneScheduleResponse findOneSchdule(Long scheduleId) {
+    public GetScheduleResponse findOneSchdule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("없는 일정 입니다.")
         );
         List<GetCommentResponse> commentByScheduleId = commentService.findCommentByScheduleId(scheduleId);
-        return new GetOneScheduleResponse(
+        return new GetScheduleResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContents(),
@@ -59,7 +59,8 @@ public class ScheduleService {
                     schedule.getContents(),
                     schedule.getPoster(),
                     schedule.getCreatedAt(),
-                    schedule.getModifiedAt()
+                    schedule.getModifiedAt(),
+                    commentService.findCommentByScheduleId(schedule.getId())
             );
             dtos.add(dto);
         }
@@ -77,7 +78,8 @@ public class ScheduleService {
                     schedule.getContents(),
                     schedule.getPoster(),
                     schedule.getCreatedAt(),
-                    schedule.getModifiedAt()
+                    schedule.getModifiedAt(),
+                    commentService.findCommentByScheduleId(schedule.getId())
             );
             dtos.add(dto);
         }
