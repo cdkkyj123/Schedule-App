@@ -9,6 +9,4 @@ public class UpdateScheduleRequest {
     private String title;
     private String poster;
     private String password;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
 }
