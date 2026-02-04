@@ -37,10 +37,6 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<GetCommentResponse> findCommentByScheduleId(Long scheduleId) {
-        boolean existence = commentRepository.existsById(scheduleId);
-        if (!existence) {
-            throw new IllegalStateException("해당 일정이 존재하지 않습니다.");
-        }
         List<Comment> comments = commentRepository.findAllCommentsByScheduleId(scheduleId);
         List<GetCommentResponse> dtos = new ArrayList<>();
         for (Comment comment : comments) {
