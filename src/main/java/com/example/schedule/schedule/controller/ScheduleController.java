@@ -1,6 +1,7 @@
 package com.example.schedule.schedule.controller;
 
 import com.example.schedule.common.AuthConstants;
+import com.example.schedule.common.service.CommonService;
 import com.example.schedule.schedule.dto.*;
 import com.example.schedule.schedule.service.ScheduleService;
 import com.example.schedule.user.dto.SessionUser;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/schedules")
 public class ScheduleController {
     private final ScheduleService scheduleService;
+    private final CommonService commonService;
 
     @PostMapping
     public ResponseEntity<CreateScheduleResponse> postSchedule(
@@ -25,12 +27,15 @@ public class ScheduleController {
             HttpSession session
     ) {
         // session에서 로그인 정보를 가져옴
-        SessionUser sessionUser = (SessionUser) session.getAttribute(AuthConstants.LOGIN_USER);
-        if (sessionUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        CreateScheduleResponse result = scheduleService.save(request, sessionUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        SessionUser sessionUser = commonService.getSessionUser(session);
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(request, sessionUser));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<GetScheduleResponse>> findAll(
+            @RequestParam(required = false) User scheduleUser
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findUserAllSchedule(scheduleUser));
     }
 
     @GetMapping("/{scheduleId}")
@@ -38,28 +43,24 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findOneSchedule(scheduleId));
     }
 
-    @GetMapping
-    public ResponseEntity<List<GetScheduleResponse>> findAll(@RequestParam(required = false) User scheduleUser) {
-
-        if(scheduleUser == null) {
-            return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findAllSchedule());
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findUserAllSchedule(scheduleUser));
-        }
-    }
-
     @PatchMapping("/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponse> update(
             @PathVariable Long scheduleId,
-            @RequestBody UpdateScheduleRequest request
+            @RequestBody UpdateScheduleRequest request,
+            HttpSession session
     ) {
-        UpdateScheduleResponse result = scheduleService.updateSchedule(scheduleId, request);
+        SessionUser sessionUser = commonService.getSessionUser(session);
+        UpdateScheduleResponse result = scheduleService.updateSchedule(scheduleId, request, sessionUser);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<Void> delete(@PathVariable Long scheduleId) {
-        scheduleService.deleteSchedule(scheduleId);
+    public ResponseEntity<Void> delete(
+            @PathVariable Long scheduleId,
+            HttpSession session
+    ) {
+        SessionUser sessionUser = commonService.getSessionUser(session);
+        scheduleService.deleteSchedule(scheduleId, sessionUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

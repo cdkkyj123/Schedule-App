@@ -3,6 +3,8 @@ package com.example.schedule.comment.entity;
 import com.example.schedule.schedule.entity.Schedule;
 import com.example.schedule.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,15 +30,17 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
-    public Comment(String content, String commenter, String password, Long scheduleId) {
+    public Comment(String content, User user, Schedule schedule) {
         this.content = content;
-        this.commenter = commenter;
-        this.password = password;
-        this.scheduleId = scheduleId;
+        this.user = user;
+        this.schedule = schedule;
     }
 
-    public void updateComment(String content, String commenter) {
+    public void update(
+            @NotBlank(message = "내용은 공백일 수 없습니다.")
+            @Size(max = 100, message = "내용이 100자를 초과할 수 없습니다.")
+            String content
+    ) {
         this.content = content;
-        this.commenter = commenter;
     }
 }

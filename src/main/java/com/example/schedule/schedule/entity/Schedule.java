@@ -28,9 +28,6 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "schedule")
-    private List<Comment> comments = new ArrayList<>();
-
     public Schedule(String title, String content, User user) {
         this.title = title;
         this.content = content;

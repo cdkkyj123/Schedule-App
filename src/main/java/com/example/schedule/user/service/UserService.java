@@ -1,14 +1,14 @@
 package com.example.schedule.user.service;
 
+import com.example.schedule.comment.service.CommentCommonValidationService;
 import com.example.schedule.config.PasswordEncoder;
+import com.example.schedule.schedule.service.ScheduleCommonValidationService;
 import com.example.schedule.user.dto.LoginRequest;
 import com.example.schedule.user.dto.*;
 import com.example.schedule.user.entity.User;
 import com.example.schedule.user.repository.UserRepository;
 import com.example.schedule.validation.AlreadyExistingEmailException;
 import com.example.schedule.validation.AlreadyLoginUserException;
-import com.example.schedule.validation.UnmatchPasswordException;
-import com.example.schedule.validation.UserNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserCommonValidationService userCommon;
 
     @Transactional
     public CreateUserResponse saveUser(CreateUserRequest request) {
@@ -52,34 +53,22 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public GetUserResponse getOneUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("없는 회원입니다.")
-        );
+        User user = userCommon.checkUser(userId);
         return new GetUserResponse(user);
     }
 
     @Transactional
-    public UpdateUserResponse updateUser(Long userId, UpdateUserRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("없는 회원입니다.")
-        );
-        boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
-        if (!matches) {
-            throw new UnmatchPasswordException("비밀번호가 일치하지 않습니다.");
-        }
+    public UpdateUserResponse updateUser(Long userId, UpdateUserRequest request, SessionUser sessionUser) {
+        User user = userCommon.checkUser(userId);
+        userCommon.checkEqualUserUser(sessionUser, user);
         user.update(request.getName(), request.getEmail());
         return new UpdateUserResponse(user);
     }
 
     @Transactional
-    public void deleteUser(Long userId, DeleteUserRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("없는 회원입니다.")
-        );
-        boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
-        if (!matches) {
-            throw new UnmatchPasswordException("비밀번호가 일치하지 않습니다.");
-        }
+    public void deleteUser(Long userId, SessionUser sessionUser) {
+        User user = userCommon.checkUser(userId);
+        userCommon.checkEqualUserUser(sessionUser, user);
         userRepository.deleteById(userId);
     }
 }

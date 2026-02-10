@@ -1,6 +1,7 @@
 package com.example.schedule.user.entity;
 
 import com.example.schedule.comment.entity.BaseEntity;
+import com.example.schedule.comment.entity.Comment;
 import com.example.schedule.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -21,12 +22,6 @@ public class User extends BaseEntity {
     private String name;
     private String email;
     private String password;
-
-    @OneToMany(mappedBy = "user")
-    private List<Schedule> schedules = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List
 
     public User(String name, String email, String password) {
         this.name = name;

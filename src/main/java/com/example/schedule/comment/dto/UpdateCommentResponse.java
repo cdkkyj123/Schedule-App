@@ -6,13 +6,13 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CreateCommentResponse {
+public class UpdateCommentResponse {
     private final Long id;
     private final String content;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public CreateCommentResponse(Comment comment) {
+    public UpdateCommentResponse(Comment comment) {
         this.id = comment.getId();
         this.content = comment.getContent();
         this.createdAt = comment.getCreatedAt();

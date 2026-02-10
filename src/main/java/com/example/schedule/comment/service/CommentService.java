@@ -1,32 +1,90 @@
 package com.example.schedule.comment.service;
 
-import com.example.schedule.comment.dto.CreateCommentRequest;
-import com.example.schedule.comment.dto.CreateCommentResponse;
-import com.example.schedule.comment.dto.GetCommentResponse;
+import com.example.schedule.comment.dto.*;
 import com.example.schedule.comment.entity.Comment;
 import com.example.schedule.comment.repository.CommentRepository;
+import com.example.schedule.common.AuthConstants;
+import com.example.schedule.schedule.entity.Schedule;
+import com.example.schedule.schedule.service.ScheduleCommonValidationService;
+import com.example.schedule.user.dto.SessionUser;
+import com.example.schedule.user.entity.User;
+import com.example.schedule.user.service.UserCommonValidationService;
+import com.example.schedule.validation.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@RequestMapping("/schedules/{scheduleId}")
 public class CommentService {
     private final CommentRepository commentRepository;
-    private static final int MAX_COMMENT_COUNT = 10;
+    private final UserCommonValidationService userCommon;
+    private final ScheduleCommonValidationService scheduleCommon;
+    private final CommentCommonValidationService commentCommon;
+
     @Transactional
-    public CreateCommentResponse saveComment(CreateCommentRequest request) {
+    public CreateCommentResponse saveComment(Long scheduleId, CreateCommentRequest request, SessionUser sessionUser) {
+        User user = userCommon.checkUser(sessionUser.getId());
+        Schedule schedule = scheduleCommon.checkSchedule(scheduleId);
         // 현재 몇개인지 조회
-        int count = commentRepository.countByScheduleId(request.getScheduleId());
-        if (count >= MAX_COMMENT_COUNT) {
-            throw new IllegalArgumentException("댓글 수가 최대(" + MAX_COMMENT_COUNT + "개)입니다.");
+        int count = commentRepository.countCommentBySchedule(schedule);
+        if (count >= AuthConstants.MAX_COMMENT_COUNT) {
+            throw new CommentFullException("댓글 수가 최대(" + AuthConstants.MAX_COMMENT_COUNT + "개)입니다.");
         }
-        Comment comment = new Comment(request.getContent(), request.getCommenter(), request.getPassword(), request.getScheduleId());
+        Comment comment = new Comment(request.getContent(), user, schedule);
         Comment savedComment = commentRepository.save(comment);
         return new CreateCommentResponse(savedComment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GetCommentResponse> getAllComment(Schedule commentSchedule, User commentUser) {
+        if (commentUser != null && commentSchedule == null) {
+            userCommon.existenceUser(commentUser);
+            // 해당 유저가 작성한 댓글들 조회
+            List<Comment> commentsUsers = commentRepository.findAllByUserId(commentUser.getId());
+            return commentsUsers.stream().map(GetCommentResponse::new).toList();
+        } else if (commentUser == null && commentSchedule != null) {
+            scheduleCommon.existenceSchedule(commentSchedule);
+            // 해당 게시글에 작성된 댓글들 조회
+            List<Comment> commentsSchedules = commentRepository.findAllByScheduleId(commentSchedule.getId());
+            return commentsSchedules.stream().map(GetCommentResponse::new).toList();
+        } else if (commentUser != null) {
+            userCommon.existenceUser(commentUser);
+            scheduleCommon.existenceSchedule(commentSchedule);
+            // 해당 유저가 해당 게시글에 작성한 댓글들 조회
+            return commentRepository.findCommentsByUserAndSchedule(commentUser, commentSchedule)
+                    .stream().map(GetCommentResponse::new).toList();
+        }
+        // 전체 댓글 조회
+        List<Comment> commentsAll = commentRepository.findAll();
+        return commentsAll.stream().map(GetCommentResponse::new).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public GetCommentResponse getOneComment(Long commentId) {
+        Comment comment = commentCommon.checkComment(commentId);
+        return new GetCommentResponse(comment);
+    }
+
+    @Transactional
+    public UpdateCommentResponse updateComment(Long commentId, UpdateCommentRequest request, SessionUser sessionUser) {
+        User user = userCommon.checkUser(sessionUser.getId());
+        Comment comment = commentCommon.checkComment(commentId);
+        commentCommon.checkEqualUserComment(comment, user);
+        comment.update(request.getContent());
+        return new UpdateCommentResponse(comment);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId, SessionUser sessionUser) {
+        User user = userCommon.checkUser(sessionUser.getId());
+        Comment comment = commentCommon.checkComment(commentId);
+        commentCommon.checkEqualUserComment(comment, user);
+        commentRepository.delete(comment);
     }
 
     @Transactional(readOnly = true)
