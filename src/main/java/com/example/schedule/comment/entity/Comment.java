@@ -1,9 +1,13 @@
 package com.example.schedule.comment.entity;
 
+import com.example.schedule.schedule.entity.Schedule;
+import com.example.schedule.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.example.schedule.common.AuthConstants.LOGIN_USER;
 
 @Getter
 @Entity
@@ -15,9 +19,14 @@ public class Comment extends BaseEntity {
     private Long id;
     @Column(length = 100, nullable = false)
     private String content;
-    private String commenter;
-    private String password;
-    private Long scheduleId; // 댓글의 원본 일정의 아이디를 저장할 필드
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "schedule_id", nullable = false)
+    private Schedule schedule;
 
     public Comment(String content, String commenter, String password, Long scheduleId) {
         this.content = content;
