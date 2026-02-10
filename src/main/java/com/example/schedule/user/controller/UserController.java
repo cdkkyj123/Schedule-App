@@ -1,6 +1,7 @@
 package com.example.schedule.user.controller;
 
 import com.example.schedule.common.AuthConstants;
+import com.example.schedule.common.service.CommonService;
 import com.example.schedule.user.dto.*;
 import com.example.schedule.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final CommonService commonService;
 
     @PostMapping("/signup")
     public ResponseEntity<CreateUserResponse> signup(
@@ -52,17 +54,20 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<UpdateUserResponse> update(
             @PathVariable Long userId,
-            @RequestBody UpdateUserRequest request
+            @RequestBody UpdateUserRequest request,
+            HttpSession session
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, request));
+        SessionUser sessionUser = commonService.getSessionUser(session);
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, request, sessionUser));
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> delete(
             @PathVariable Long userId,
-            @RequestBody DeleteUserRequest request
+            HttpSession session
     ) {
-        userService.deleteUser(userId, request);
+        SessionUser sessionUser = commonService.getSessionUser(session);
+        userService.deleteUser(userId, sessionUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
