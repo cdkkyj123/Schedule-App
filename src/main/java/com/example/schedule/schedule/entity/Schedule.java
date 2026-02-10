@@ -1,11 +1,15 @@
 package com.example.schedule.schedule.entity;
 
 import com.example.schedule.comment.entity.BaseEntity;
+import com.example.schedule.comment.entity.Comment;
 import com.example.schedule.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -23,6 +27,9 @@ public class Schedule extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "schedule")
+    private List<Comment> comments = new ArrayList<>();
 
     public Schedule(String title, String content, User user) {
         this.title = title;
