@@ -20,7 +20,10 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<CreateScheduleResponse> postSchedule(@RequestBody CreateScheduleRequest request, HttpSession session) {
+    public ResponseEntity<CreateScheduleResponse> postSchedule(
+            @RequestBody CreateScheduleRequest request,
+            HttpSession session
+    ) {
         // session에서 로그인 정보를 가져옴
         SessionUser sessionUser = (SessionUser) session.getAttribute(AuthConstants.LOGIN_USER);
         if (sessionUser == null) {

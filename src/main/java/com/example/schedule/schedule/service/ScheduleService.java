@@ -8,6 +8,8 @@ import com.example.schedule.comment.service.CommentService;
 import com.example.schedule.user.dto.SessionUser;
 import com.example.schedule.user.entity.User;
 import com.example.schedule.user.repository.UserRepository;
+import com.example.schedule.validation.ScheduleNotFoundException;
+import com.example.schedule.validation.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +27,7 @@ public class ScheduleService {
     @Transactional
     public CreateScheduleResponse save(CreateScheduleRequest request, SessionUser sessionUser) {
         User user = userRepository.findById(sessionUser.getId()).orElseThrow(
-                () -> new IllegalStateException("없는 회원입니다.")
+                () -> new UserNotFoundException("없는 회원입니다.")
         );
         Schedule schedule = new Schedule(request.getTitle(), request.getContent(), user);
         Schedule savedSchedule = scheduleRepository.save(schedule);
@@ -35,7 +37,7 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public GetScheduleResponse findOneSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("없는 일정 입니다.")
+                () -> new ScheduleNotFoundException("없는 일정 입니다.")
         );
         List<GetCommentResponse> commentByScheduleId = commentService.findCommentByScheduleId(scheduleId);
         return new GetScheduleResponse(schedule, commentByScheduleId);
@@ -70,7 +72,7 @@ public class ScheduleService {
     @Transactional
     public UpdateScheduleResponse updateSchedule(Long scheduleId, UpdateScheduleRequest request) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("없는 일정 입니다.")
+                () -> new ScheduleNotFoundException("없는 일정 입니다.")
         );
         schedule.update(request.getTitle(), request.getContent());
         return new UpdateScheduleResponse(schedule);
@@ -81,7 +83,7 @@ public class ScheduleService {
     public void deleteSchedule(Long scheduleId) {
         boolean existence = scheduleRepository.existsById(scheduleId);
         if (!existence) {
-            throw new IllegalStateException("없는 일정 입니다.");
+            throw new ScheduleNotFoundException("없는 일정 입니다.");
         }
         scheduleRepository.deleteById(scheduleId);
     }

@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @NotBlank(message = "회원가입 시 입력한 이메일을 입력해주세요.")
             @Email(message = "올바른 형식의 이메일을 입력해주세요.") String email
     );
+
+    boolean existsByEmail(@NotBlank(message = "이메일을 입력해주세요.") @Email(message = "올바른 형식의 이메일을 입력해주세요.") String email);
 }
