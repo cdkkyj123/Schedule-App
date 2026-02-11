@@ -13,13 +13,11 @@ import com.example.schedule.validation.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@RequestMapping("/schedules/{scheduleId}")
 public class CommentService {
     private final CommentRepository commentRepository;
     private final UserCommonValidationService userCommon;
@@ -93,5 +91,9 @@ public class CommentService {
         return comments.stream()
                 .map(GetCommentResponse::new)
                 .toList();
+    }
+
+    public int commentCount(Schedule schedule) {
+        return commentRepository.countCommentBySchedule(schedule);
     }
 }

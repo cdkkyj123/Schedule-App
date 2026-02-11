@@ -1,19 +1,17 @@
 package com.example.schedule.schedule.service;
 
 import com.example.schedule.comment.dto.GetCommentResponse;
-import com.example.schedule.comment.service.CommentCommonValidationService;
 import com.example.schedule.schedule.dto.*;
 import com.example.schedule.schedule.entity.Schedule;
 import com.example.schedule.schedule.repository.ScheduleRepository;
 import com.example.schedule.comment.service.CommentService;
 import com.example.schedule.user.dto.SessionUser;
 import com.example.schedule.user.entity.User;
-import com.example.schedule.user.repository.UserRepository;
 import com.example.schedule.user.service.UserCommonValidationService;
-import com.example.schedule.validation.ForbiddenUserException;
-import com.example.schedule.validation.ScheduleNotFoundException;
-import com.example.schedule.validation.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,24 +29,21 @@ public class ScheduleService {
     public CreateScheduleResponse save(CreateScheduleRequest request, SessionUser sessionUser) {
         User user = userCommon.checkUser(sessionUser.getId());
         Schedule schedule = new Schedule(request.getTitle(), request.getContent(), user);
-        Schedule savedSchedule = scheduleRepository.save(schedule);
-        return new CreateScheduleResponse(savedSchedule);
+        return new CreateScheduleResponse(scheduleRepository.save(schedule));
     }
 
     @Transactional(readOnly = true)
-    public List<GetScheduleResponse> findUserAllSchedule(User scheduleUser) {
-        if (scheduleUser == null) {
-            List<Schedule> schedules = scheduleRepository.findAll();
-            return schedules.stream()
-                    .map(schedule -> new GetScheduleResponse(
-                            schedule, commentService.findCommentByScheduleId(schedule.getId())))
-                    .toList();
-        }
-        List<Schedule> schedules = scheduleRepository.findAllByUser(scheduleUser);
-        return schedules.stream()
-                .map(schedule -> new GetScheduleResponse(
-                        schedule, commentService.findCommentByScheduleId(schedule.getId())))
+    public List<GetPageResponse> findAllSchedule(Page<Schedule> schedulePage) {
+        return schedulePage.stream()
+                .map(schedule -> new GetPageResponse(
+                        schedule, commentService.commentCount(schedule)))
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Schedule> getPageByUser(int page, int size, User scheduleUser) {
+        Pageable pageable = PageRequest.of(page, size);
+        return scheduleRepository.findAllByUserOrderByModifiedAtDesc(pageable, scheduleUser);
     }
 
     @Transactional(readOnly = true)

@@ -1,15 +1,11 @@
 package com.example.schedule.schedule.entity;
 
-import com.example.schedule.comment.entity.BaseEntity;
-import com.example.schedule.comment.entity.Comment;
+import com.example.schedule.common.entity.BaseEntity;
 import com.example.schedule.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Entity
