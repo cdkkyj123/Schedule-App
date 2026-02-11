@@ -1,17 +1,11 @@
 package com.example.schedule.user.service;
 
-import com.example.schedule.common.AuthConstants;
-import com.example.schedule.schedule.entity.Schedule;
 import com.example.schedule.user.dto.SessionUser;
 import com.example.schedule.user.entity.User;
 import com.example.schedule.user.repository.UserRepository;
 import com.example.schedule.validation.ForbiddenUserException;
-import com.example.schedule.validation.UnauthorizedException;
 import com.example.schedule.validation.UserNotFoundException;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service

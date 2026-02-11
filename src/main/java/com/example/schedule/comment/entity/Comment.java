@@ -1,5 +1,6 @@
 package com.example.schedule.comment.entity;
 
+import com.example.schedule.common.entity.BaseEntity;
 import com.example.schedule.schedule.entity.Schedule;
 import com.example.schedule.user.entity.User;
 import jakarta.persistence.*;
@@ -8,8 +9,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static com.example.schedule.common.AuthConstants.LOGIN_USER;
 
 @Getter
 @Entity

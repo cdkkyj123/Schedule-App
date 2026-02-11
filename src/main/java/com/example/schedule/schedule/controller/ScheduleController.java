@@ -3,11 +3,13 @@ package com.example.schedule.schedule.controller;
 import com.example.schedule.common.AuthConstants;
 import com.example.schedule.common.service.CommonService;
 import com.example.schedule.schedule.dto.*;
+import com.example.schedule.schedule.entity.Schedule;
 import com.example.schedule.schedule.service.ScheduleService;
 import com.example.schedule.user.dto.SessionUser;
 import com.example.schedule.user.entity.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +34,17 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GetScheduleResponse>> findAll(
+    public ResponseEntity<List<GetPageResponse>> findAll(
+            @RequestParam(defaultValue = "0") int page, // 현재 페이지
+            @RequestParam(defaultValue = "10") int size, // 크기
             @RequestParam(required = false) User scheduleUser
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findUserAllSchedule(scheduleUser));
+        Page<Schedule> schedulePage = scheduleService.getPageByUser(page, size, scheduleUser);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findAllSchedule(schedulePage));
     }
 
     @GetMapping("/{scheduleId}")
-    public ResponseEntity<GetScheduleResponse> findOne(@PathVariable Long scheduleId){
+    public ResponseEntity<GetScheduleResponse> findOne(@PathVariable Long scheduleId) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findOneSchedule(scheduleId));
     }
 

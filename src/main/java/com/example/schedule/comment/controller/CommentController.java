@@ -2,7 +2,6 @@ package com.example.schedule.comment.controller;
 
 import com.example.schedule.comment.dto.*;
 import com.example.schedule.comment.service.CommentService;
-import com.example.schedule.common.AuthConstants;
 import com.example.schedule.common.service.CommonService;
 import com.example.schedule.schedule.entity.Schedule;
 import com.example.schedule.user.dto.SessionUser;
