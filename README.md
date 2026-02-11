@@ -1,7 +1,7 @@
 # 📆 Schedule-App (일정 관리 앱)
 
-이 프로젝트는 **Spring Boot 기반 RESTful 서버**로,  
-회원가입과 로그인을 통해 사용자를 인증하고, 
+이 프로젝트는 **Spring Boot 기반 RESTful API 서버**로,  
+회원가입과 로그인을 통해 사용자(User)를 인증하고, 
 인증된 사용자만이 일정(Schedule)과 댓글(Comment)을 
 작성, 수정, 삭제할 수 있는 기능을 갖춘 **일정 관리 애플리케이션**입니다.
 
