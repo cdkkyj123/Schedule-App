@@ -58,7 +58,8 @@ public class UserService {
     public UpdateUserResponse updateUser(Long userId, UpdateUserRequest request, SessionUser sessionUser) {
         User user = userCommon.checkUser(userId);
         userCommon.checkEqualUserUser(sessionUser, user);
-        user.update(request.getName(), request.getEmail());
+        String encodedPassword = passwordEncoder.encode(request.getUpdatePassword());
+        user.update(request.getName(), request.getEmail(), encodedPassword);
         return new UpdateUserResponse(user);
     }
 
