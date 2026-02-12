@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    @Query("SELECT s from Schedule s where (:user is null or s.user = :user) order by s.modifiedAt desc")
+    @Query("SELECT s from Schedule s join fetch s.user where (:user is null or s.user = :user) order by s.modifiedAt desc")
     Page<Schedule> findAllByUserOrderByModifiedAtDesc(Pageable pageable, User user);
 }
