@@ -19,8 +19,8 @@ public class ScheduleCommonValidationService {
         );
     }
 
-    public void existenceSchedule(Schedule commentSchedule) {
-        boolean exSchedule = scheduleRepository.existsById(commentSchedule.getId());
+    public void existenceSchedule(Long scheduleId) {
+        boolean exSchedule = scheduleRepository.existsById(scheduleId);
         if (!exSchedule) {
             throw new ScheduleNotFoundException("없는 일정입니다.");
         }

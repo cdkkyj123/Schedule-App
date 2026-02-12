@@ -39,22 +39,22 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<GetCommentResponse> getAllComment(Schedule commentSchedule, User commentUser) {
-        if (commentUser != null && commentSchedule == null) {
-            userCommon.existenceUser(commentUser);
+    public List<GetCommentResponse> getAllComment(Long scheduleId, Long userId) {
+        if (userId != null && scheduleId == null) {
+            userCommon.existenceUser(userId);
             // 해당 유저가 작성한 댓글들 조회
-            List<Comment> commentsUsers = commentRepository.findAllByUserId(commentUser.getId());
+            List<Comment> commentsUsers = commentRepository.findAllByUserId(userId);
             return commentsUsers.stream().map(GetCommentResponse::new).toList();
-        } else if (commentUser == null && commentSchedule != null) {
-            scheduleCommon.existenceSchedule(commentSchedule);
+        } else if (userId == null && scheduleId != null) {
+            scheduleCommon.existenceSchedule(scheduleId);
             // 해당 게시글에 작성된 댓글들 조회
-            List<Comment> commentsSchedules = commentRepository.findAllByScheduleId(commentSchedule.getId());
+            List<Comment> commentsSchedules = commentRepository.findAllByScheduleId(scheduleId);
             return commentsSchedules.stream().map(GetCommentResponse::new).toList();
-        } else if (commentUser != null) {
-            userCommon.existenceUser(commentUser);
-            scheduleCommon.existenceSchedule(commentSchedule);
+        } else if (userId != null) {
+            userCommon.existenceUser(userId);
+            scheduleCommon.existenceSchedule(scheduleId);
             // 해당 유저가 해당 게시글에 작성한 댓글들 조회
-            return commentRepository.findCommentsByUserAndSchedule(commentUser, commentSchedule)
+            return commentRepository.findCommentsByUserIdAndScheduleId(userId, scheduleId)
                     .stream().map(GetCommentResponse::new).toList();
         }
         // 전체 댓글 조회
