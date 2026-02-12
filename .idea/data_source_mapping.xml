@@ -2,5 +2,6 @@
 <project version="4">
   <component name="DataSourcePerFileMappings">
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/3c9be484-626e-4012-96a0-8cc452170138/console.sql" value="3c9be484-626e-4012-96a0-8cc452170138" />
+    <file url="file://$PROJECT_DIR$/schedule/src/main/java/com/example/schedule/user/entity/User.java" value="3c9be484-626e-4012-96a0-8cc452170138" />
   </component>
 </project>
