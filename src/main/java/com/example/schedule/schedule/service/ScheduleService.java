@@ -1,10 +1,10 @@
 package com.example.schedule.schedule.service;
 
 import com.example.schedule.comment.dto.GetCommentResponse;
+import com.example.schedule.comment.service.CommentService;
 import com.example.schedule.schedule.dto.*;
 import com.example.schedule.schedule.entity.Schedule;
 import com.example.schedule.schedule.repository.ScheduleRepository;
-import com.example.schedule.comment.service.CommentService;
 import com.example.schedule.user.dto.SessionUser;
 import com.example.schedule.user.entity.User;
 import com.example.schedule.user.service.UserCommonValidationService;

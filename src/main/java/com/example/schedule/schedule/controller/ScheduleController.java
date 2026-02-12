@@ -1,6 +1,5 @@
 package com.example.schedule.schedule.controller;
 
-import com.example.schedule.common.AuthConstants;
 import com.example.schedule.common.service.CommonService;
 import com.example.schedule.schedule.dto.*;
 import com.example.schedule.schedule.entity.Schedule;

@@ -1,9 +1,6 @@
 package com.example.schedule.user.service;
 
-import com.example.schedule.comment.service.CommentCommonValidationService;
 import com.example.schedule.config.PasswordEncoder;
-import com.example.schedule.schedule.service.ScheduleCommonValidationService;
-import com.example.schedule.user.dto.LoginRequest;
 import com.example.schedule.user.dto.*;
 import com.example.schedule.user.entity.User;
 import com.example.schedule.user.repository.UserRepository;

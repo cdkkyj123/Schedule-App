@@ -4,7 +4,6 @@ import com.example.schedule.common.AuthConstants;
 import com.example.schedule.user.dto.SessionUser;
 import com.example.schedule.validation.UnauthorizedException;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
