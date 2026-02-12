@@ -20,6 +20,7 @@ public class User extends BaseEntity {
     private Long id;
     private boolean deleted = Boolean.FALSE;
     private String name;
+    @Column(unique = true)
     private String email;
     private String password;
 

@@ -2,11 +2,11 @@ package com.example.schedule.comment.controller;
 
 import com.example.schedule.comment.dto.*;
 import com.example.schedule.comment.service.CommentService;
+import com.example.schedule.common.dto.ApiResponse;
 import com.example.schedule.common.service.CommonService;
 import com.example.schedule.user.dto.SessionUser;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,47 +20,47 @@ public class CommentController {
     private final CommonService commonService;
 
     @PostMapping
-    public ResponseEntity<CreateCommentResponse> save(
+    public ResponseEntity<ApiResponse<CreateCommentResponse>> save(
             @PathVariable Long scheduleId,
             @RequestBody CreateCommentRequest request,
             HttpSession session
     ) {
         SessionUser sessionUser = commonService.getSessionUser(session);
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.saveComment(scheduleId, request, sessionUser));
+        return ResponseEntity.ok(ApiResponse.success(commentService.saveComment(scheduleId, request, sessionUser)));
     }
 
     @GetMapping
-    public ResponseEntity<List<GetCommentResponse>> getAll(
+    public ResponseEntity<ApiResponse<List<GetCommentResponse>>> getAll(
             @RequestParam(required = false) Long scheduleId,
             @RequestParam(required = false) Long userId
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllComment(scheduleId, userId));
+        return ResponseEntity.ok(ApiResponse.success(commentService.getAllComment(scheduleId, userId)));
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<GetCommentResponse> getOne(
+    public ResponseEntity<ApiResponse<GetCommentResponse>> getOne(
             @PathVariable Long commentId
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getOneComment(commentId));
+        return ResponseEntity.ok(ApiResponse.success(commentService.getOneComment(commentId)));
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<UpdateCommentResponse> update(
+    public ResponseEntity<ApiResponse<UpdateCommentResponse>> update(
             @PathVariable Long commentId,
             @RequestBody UpdateCommentRequest request,
             HttpSession session
     ) {
         SessionUser sessionUser = commonService.getSessionUser(session);
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(commentId, request, sessionUser));
+        return ResponseEntity.ok(ApiResponse.success(commentService.updateComment(commentId, request, sessionUser)));
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<ApiResponse<Void>> delete(
             @PathVariable Long commentId,
             HttpSession session
     ) {
         SessionUser sessionUser = commonService.getSessionUser(session);
         commentService.deleteComment(commentId, sessionUser);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(ApiResponse.successWithNoContent());
     }
 }
