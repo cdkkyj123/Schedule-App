@@ -9,7 +9,7 @@ import com.example.schedule.schedule.service.ScheduleCommonValidationService;
 import com.example.schedule.user.dto.SessionUser;
 import com.example.schedule.user.entity.User;
 import com.example.schedule.user.service.UserCommonValidationService;
-import com.example.schedule.validation.*;
+import com.example.schedule.validation.CommentFullException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
