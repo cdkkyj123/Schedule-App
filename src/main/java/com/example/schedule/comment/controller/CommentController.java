@@ -33,10 +33,10 @@ public class CommentController {
 
     @GetMapping
     public ResponseEntity<List<GetCommentResponse>> getAll(
-            @RequestParam(required = false) Schedule commentSchedule,
-            @RequestParam(required = false) User commentUser
+            @RequestParam(required = false) Long scheduleId,
+            @RequestParam(required = false) Long userId
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllComment(commentSchedule, commentUser));
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllComment(scheduleId, userId));
     }
 
     @GetMapping("/{commentId}")

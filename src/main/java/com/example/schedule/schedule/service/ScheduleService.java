@@ -33,17 +33,17 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Schedule> getPageByUser(int page, int size, User scheduleUser) {
+        Pageable pageable = PageRequest.of(page, size);
+        return scheduleRepository.findAllByUserOrderByModifiedAtDesc(pageable, scheduleUser);
+    }
+
+    @Transactional(readOnly = true)
     public List<GetPageResponse> findAllSchedule(Page<Schedule> schedulePage) {
         return schedulePage.stream()
                 .map(schedule -> new GetPageResponse(
                         schedule, commentService.commentCount(schedule)))
                 .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public Page<Schedule> getPageByUser(int page, int size, User scheduleUser) {
-        Pageable pageable = PageRequest.of(page, size);
-        return scheduleRepository.findAllByUserOrderByModifiedAtDesc(pageable, scheduleUser);
     }
 
     @Transactional(readOnly = true)

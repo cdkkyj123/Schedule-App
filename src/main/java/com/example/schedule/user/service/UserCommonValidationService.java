@@ -19,8 +19,8 @@ public class UserCommonValidationService {
         );
     }
 
-    public void existenceUser(User commentUser) {
-        boolean exUser = userRepository.existsById(commentUser.getId());
+    public void existenceUser(Long userId) {
+        boolean exUser = userRepository.existsById(userId);
         if (!exUser) {
             throw new UserNotFoundException("없는 회원입니다.");
         }
