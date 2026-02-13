@@ -19,6 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final CommentService commentService;
@@ -32,13 +33,11 @@ public class ScheduleService {
         return new CreateScheduleResponse(scheduleRepository.save(schedule));
     }
 
-    @Transactional(readOnly = true)
     public Page<Schedule> getPageByUser(int page, int size, User scheduleUser) {
         Pageable pageable = PageRequest.of(page, size);
         return scheduleRepository.findAllByUserOrderByModifiedAtDesc(pageable, scheduleUser);
     }
 
-    @Transactional(readOnly = true)
     public List<GetPageResponse> findAllSchedule(Page<Schedule> schedulePage) {
         return schedulePage.stream()
                 .map(schedule -> new GetPageResponse(
@@ -46,7 +45,6 @@ public class ScheduleService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
     public GetScheduleResponse findOneSchedule(Long scheduleId) {
         Schedule schedule = scheduleCommon.checkSchedule(scheduleId);
         List<GetCommentResponse> commentByScheduleId = commentService.findCommentByScheduleId(scheduleId);

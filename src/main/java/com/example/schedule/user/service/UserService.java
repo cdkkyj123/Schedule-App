@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -32,7 +33,6 @@ public class UserService {
         return new CreateUserResponse(savedUser);
     }
 
-    @Transactional(readOnly = true)
     public SessionUser login(@Valid LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new AlreadyLoginUserException("이미 로그인 되어있는 회원입니다.")
@@ -40,7 +40,6 @@ public class UserService {
         return new SessionUser(user);
     }
 
-    @Transactional(readOnly = true)
     public List<GetUserResponse> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
@@ -48,7 +47,6 @@ public class UserService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
     public GetUserResponse getOneUser(Long userId) {
         User user = userCommon.checkUser(userId);
         return new GetUserResponse(user);

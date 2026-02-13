@@ -18,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentService {
     private final CommentRepository commentRepository;
     private final UserCommonValidationService userCommon;
@@ -38,7 +39,6 @@ public class CommentService {
         return new CreateCommentResponse(savedComment);
     }
 
-    @Transactional(readOnly = true)
     public List<GetCommentResponse> getAllComment(Long scheduleId, Long userId) {
         if (userId != null && scheduleId == null) {
             userCommon.existenceUser(userId);
@@ -62,7 +62,6 @@ public class CommentService {
         return commentsAll.stream().map(GetCommentResponse::new).toList();
     }
 
-    @Transactional(readOnly = true)
     public GetCommentResponse getOneComment(Long commentId) {
         Comment comment = commentCommon.checkComment(commentId);
         return new GetCommentResponse(comment);
@@ -85,7 +84,6 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    @Transactional(readOnly = true)
     public List<GetCommentResponse> findCommentByScheduleId(Long scheduleId) {
         List<Comment> comments = commentRepository.findAllCommentsByScheduleId(scheduleId);
         return comments.stream()
