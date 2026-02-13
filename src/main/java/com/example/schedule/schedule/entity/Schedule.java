@@ -8,19 +8,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Entity
 @Table(name = "schedules")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE schedules SET deleted = true WHERE id = ?")
-@SQLRestriction("deleted = false")
+@SoftDelete(columnName = "deleted")
 public class Schedule extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private boolean deleted = Boolean.FALSE;
     @Column(length = 30, nullable = false)
     private String title;
     @Column(length = 200, nullable = false)
