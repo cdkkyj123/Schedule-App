@@ -146,6 +146,10 @@ erDiagram
     - `ForbiddenUserException` (접근 권한 없음) → 403 Forbidden
     - `AlreadyExistingEmailException` (이메일 중복) → 409 Conflict
 
+### 7. API 응답 통일 (Response Standardization)
+- **응답 래퍼(Wrapper) 적용:** 모든 API 응답을 `ApiResponse<T>` 객체로 감싸 `{ "status": "...", "message": "...", "data": ... }` 형태의 일관된 JSON 구조를 반환하도록 통일했습니다.
+- **예외 처리 표준화:** 성공 시에는 `data`를 반환하고, 예외 발생 시에는 `GlobalExceptionHandler`를 통해 동일한 포맷의 에러 메시지를 반환하여 프론트엔드에서의 데이터 처리 효율성과 예측 가능성을 높였습니다.
+
 ---
 
 ## 🔎 회고
