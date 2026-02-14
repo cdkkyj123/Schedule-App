@@ -7,9 +7,11 @@ import com.example.schedule.validation.CommentNotFoundException;
 import com.example.schedule.validation.ForbiddenUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentCommonValidationService {
     private final CommentRepository commentRepository;
 

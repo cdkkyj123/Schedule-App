@@ -7,9 +7,11 @@ import com.example.schedule.validation.ForbiddenUserException;
 import com.example.schedule.validation.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserCommonValidationService {
     private final UserRepository userRepository;
 
