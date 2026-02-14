@@ -5,8 +5,10 @@ import com.example.schedule.user.dto.SessionUser;
 import com.example.schedule.validation.UnauthorizedException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CommonService {
 
     public SessionUser getSessionUser(HttpSession session) {
